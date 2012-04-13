@@ -25,20 +25,51 @@ module("QTE", {
         clock.restore();
     })
     test("QTE keypressed load a succes",function(){
-        $('#test').qte()
-        var e = jQuery.Event( 'keydown', { which: 40 } );
+        $('#test').qte({key:'a'})
+        var e = jQuery.Event( 'keydown', { which: 65 } );
         $('#test').trigger(e)
         equal($('.QTE').html(),"SUCCES")
     })
     test("QTE can be chained",function(){
         var clock = this.sandbox.useFakeTimers();
-        $('#test').qte().qte({time:10,delay:10})
-         equal($('.QTE').html(), "SPACE");
-        var e = jQuery.Event( 'keydown', { which: 40 } );
+        $('#test').qte({key:'a'}).qte({time:10,delay:10})
+         equal($('.QTE').html(), "a");
+        var e = jQuery.Event( 'keydown', { which: 65 } );
         $('#test').trigger(e)
         equal($('.QTE').html(),"SUCCES")
         clock.tick(11);
         equal($('.QTE:last').html(), "SPACE");
+        clock.restore();
+    })
+    test("QTE fail if not correct key entered",function(){
+        $('#test').qte({key:'a'})
+        var e = jQuery.Event( 'keydown', { which: 66 } );
+        $('#test').trigger(e)
+        equal($('.QTE').html(),"Fail!")
+        
+    })
+    test("QTE can have several attempt", function(){
+        $('#test').qte({key:'b',attempt:3})
+        var e = jQuery.Event( 'keydown', { which: 65 } );
+        $('#test').trigger(e)
+        equal($('.QTE').html(),"Fail! Try again")
+        $('#test').trigger(e)
+        equal($('.QTE').html(),"Fail! Try again")
+        var e = jQuery.Event( 'keydown', { which: 66 } );
+        $('#test').trigger(e)
+        equal($('.QTE').html(),"SUCCES")
+    })
+    
+    test("QTE can fail after several attempt", function(){
+        $('#test').qte({key:'b',attempt:3})
+        var e = jQuery.Event( 'keydown', { which: 65 } );
+        $('#test').trigger(e)
+        equal($('.QTE').html(),"Fail! Try again")
+        $('#test').trigger(e)
+        equal($('.QTE').html(),"Fail! Try again")
+        var e = jQuery.Event( 'keydown', { which: 65 } );
+        $('#test').trigger(e)
+        equal($('.QTE').html(),"Fail!")
     })
     
 });

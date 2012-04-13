@@ -14,8 +14,9 @@
           $this = $(this);
           // build element specific options
           var o = $.meta ? $.extend({}, opts, $this.data()) : opts;
-                    
-          $.fn.qte.pop($this,o);
+                
+          var attempt = 0    
+          $.fn.qte.pop($this,o,0);
           
         });
       };
@@ -29,7 +30,7 @@
       //
       // define and expose our format function
       //
-      $.fn.qte.pop = function(obj,o) {
+      $.fn.qte.pop = function(obj,o,attempt) {
         var qte = $("<div class='QTE'/>");
         if (o.time === 0){
             qte.html(o.key)
@@ -43,10 +44,23 @@
                 qte.html(o.key)
             },o.time);
         }
-        $(document).keydown(function(event) {
-            if ( event.which == 40 ) {
+        obj.keydown(function(event) {
+            attempt = attempt + 1
+                if ( String.fromCharCode(event.which) === String.toUpperCase(o.key) ) {
                 qte.html('SUCCES')
+                //qte.html(o.key)
             }
+            else{
+                
+                qte.html('Fail!')
+                if(attempt < o.attempt){
+                    qte.html('Fail! Try again')
+                }
+                if(o.attempt === attempt){
+                    obj.unbind('keydown')
+                }
+            }
+            
         })
         obj.append(qte)
       };
@@ -56,7 +70,8 @@
       $.fn.qte.defaults = {
         key:'SPACE',
         time:0,
-        delay:0
+        delay:0,
+        attempt:0
       };
     //
     // end of closure
