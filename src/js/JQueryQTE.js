@@ -46,7 +46,7 @@
         }
         obj.keydown(function(event) {
             attempt = attempt + 1
-                if ( String.fromCharCode(event.which) === String.toUpperCase(o.key) ) {
+                if ( String.fromCharCode(event.which) === (o.key).toUpperCase() ) {
                 qte.html('SUCCES')
                 //qte.html(o.key)
             }
