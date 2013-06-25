@@ -8,17 +8,13 @@
     // plugin definition
     //
     $.fn.qte = function(options) {
-        // build main options before element iteration
-        var opts = $.extend({}, $.fn.qte.defaults, options);
+        
+	var opts = $.extend({}, $.fn.qte.defaults, options);
         // iterate and reformat each matched element
         return this.each(function() {
-            $this = $(this);
-            // build element specific options
-            var o = $.meta ? $.extend({}, opts, $this.data()) : opts;
-            
-            $.fn.qte.pop($this,o);
-            
-        });
+	    $this = $(this);
+	    $.fn.qte.pop($this,opts);
+	});
     };
 
     //
@@ -33,9 +29,9 @@
     //
     // private function for debugging
     //
-    function debug($obj) {
+    function debug(obj) {
         if (window.console && window.console.log)
-            window.console.log('QTE Call' + $obj.size());
+            window.console.log('QTE Call' + JSON.stringify(obj));
     };
     //
     // define and expose our format function
@@ -63,7 +59,6 @@
         obj.append(qte)
     };
 
-
     $.fn.qte.succes = function(obj){
 	obj.html('SUCCES')
     }
@@ -78,7 +73,7 @@
     }
 
     $.fn.qte.display = function(obj,options,attempt){
-       if (options.time === 0){
+	if (options.time === 0){
             obj.html(options.key)
         }else{
             setTimeout(function(){
