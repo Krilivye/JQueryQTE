@@ -13,10 +13,24 @@
         // iterate and reformat each matched element
         return this.each(function() {
 	    $this = $(this);
-	    $.fn.qte.pop($this,opts);
+	    pop($this,opts);
 	});
     };
+    
+    $.fn.qte.succes = function(){
+	$(this).html('SUCCES')
+    }
 
+    $.fn.qte.fail = function(){
+	$(this).html('Fail!')
+    }
+
+    $.fn.qte.display = function(options,attempt){
+	$(this).html(options.key)
+    }
+    $.fn.qte.fail_attempt = function(options,attempt){
+	$(this).html('Fail! Try again')
+    }
     //
     // plugin defaults
     //
@@ -24,8 +38,14 @@
         key:'SPACE',
         time:0,
         delay:0,
-        attempt:0
+        max_attempt:0,
+	hover:false,
+	fail:$.fn.qte.fail,
+	fail_attempt:$.fn.qte.fail_attempt,
+	succes:$.fn.qte.succes,
+	display:$.fn.qte.display
     };
+
     //
     // private function for debugging
     //
@@ -36,56 +56,55 @@
     //
     // define and expose our format function
     //
-    $.fn.qte.pop = function(obj,options) {
-        var qte = $("<div class='QTE'/>");
+    function pop(obj,options) {
+	obj.addClass('QTE')
 	var attempt = 0;
-	$.fn.qte.display(qte,options,attempt);
-
-        obj.keydown(function(event) {
-            attempt = attempt + 1;
-            if ( String.fromCharCode(event.which) === (options.key).toUpperCase() ) {
-                $.fn.qte.succes(qte);
-            }
-            else{
-                
-                $.fn.qte.fail(qte,options,attempt);
-
-                if(options.attempt === attempt){
-                    obj.unbind('keydown')
-                }
-            }
-            
-        })
-        obj.append(qte)
-    };
-
-    $.fn.qte.succes = function(obj){
-	obj.html('SUCCES')
-    }
-
-    $.fn.qte.fail = function(obj,options,attempt){
-	
-        if(attempt < options.attempt){
-                    obj.html('Fail! Try again')
-        }else{
-	    obj.html('Fail!')
-	}
-    }
-
-    $.fn.qte.display = function(obj,options,attempt){
 	if (options.time === 0){
-            obj.html(options.key)
-        }else{
-            setTimeout(function(){
-                if(options.delay != 0){
-                    setTimeout(function(){
-                        obj.empty();
-                    },options.delay)
-                }
-                obj.html(options.key)
+	    options.display.call(obj.get(),options,attempt);
+	    if(options.hover){
+		obj.hover(function hqte(){bindqte(obj,options,attempt)});
+	    }else{
+		bindqte(obj,options,attempt);
+	    }
+	    delayedQte(obj,options);
+	}else{
+            setTimeout(function(){               	
+		options.display.call(obj.get(),options,attempt);
+		bindqte(obj,options,attempt);
+		delayedQte(obj,options);
             },options.time);
         }
+    };
+
+    function delayedQte(obj,options){
+            if(options.delay != 0){
+                setTimeout(function(){
+                    obj.empty();
+		    $(document).unbind('keydown');
+                },options.delay)
+	    }
     }
+    function bindqte(obj,options,attempt){
+        $(document).keydown(function(event) {
+            attempt = attempt + 1;
+            if ( String.fromCharCode(event.which) === (options.key).toUpperCase() ) {
+                options.succes.call(obj.get());
+		$(document).unbind('keydown');
+            }
+            else{                             
+		if(attempt < options.max_attempt){
+                    options.fail_attempt.call(obj.get(),options,attempt);
+		}else{		  
+		    options.fail.call(obj.get());
+		    $(document).unbind('keydown')
+		}
+            }           
+        })
+    }
+
+
+
+
     //
     // end of closure
     //
