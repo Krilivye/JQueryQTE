@@ -150,6 +150,48 @@ $(document).ready(function(){
 	equal($('.ctest:last').html(),'SPACE');
 
     })
+    test("Can offer pattern qte (combo)",function(){
+	$('#test').qte({key:['a','b','c']});
+	
+	equal($('#test').html(),'a,b,c');		  
+    })
+    test("Can work with a pattern qte",function(){
+	$('#test').qte({key:['a','b','c']});
+
+	$('#test').trigger(key_a);
+	$('#test').trigger(key_b);
+	$('#test').trigger(key_c);
+
+	equal($('#test').html(),'SUCCES');
+    })
+    test("Can fail while in middle of a pattern qte",function(){
+	$('#test').qte({key:['a','b','c']});
+
+	$('#test').trigger(key_a);
+	$('#test').trigger(key_c);
+	$('#test').trigger(key_b);
+
+	equal($('#test').html(),'Fail!');
+    })
+
+    test("Can have attemps with a pattern qte",function(){
+	$('#test').qte({key:['a','b','c'],max_attempt:3});
+
+	$('#test').trigger(key_a);
+	$('#test').trigger(key_b);
+	$('#test').trigger(key_b);
+
+	equal($('#test').html(),'Fail! Try again');
+
+	$('#test').trigger(key_c);
+	equal($('#test').html(),'Fail! Try again');
+
+	$('#test').trigger(key_a);
+	$('#test').trigger(key_b);
+	$('#test').trigger(key_c);
+
+	equal($('#test').html(),'SUCCES');
+    })
 
     module("Customisation", {
 	setup: function(){

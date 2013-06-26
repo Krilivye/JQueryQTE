@@ -8,7 +8,9 @@
     // plugin definition
     //
     $.fn.qte = function(options) {
-        
+	if (options && options.key){
+            options.key = [].concat(options.key)
+	}
 	var opts = $.extend({}, $.fn.qte.defaults, options);
         // iterate and reformat each matched element
         return this.each(function() {
@@ -26,8 +28,13 @@
     }
 
     $.fn.qte.display = function(options,attempt){
-	$(this).html(options.key)
+	var display = ""
+	    $.each(options.key, function(index,value){
+		display = display + value +','
+	    })
+	$(this).html(display.slice(0,-1))
     }
+
     $.fn.qte.fail_attempt = function(options,attempt){
 	$(this).html('Fail! Try again')
     }
@@ -35,7 +42,7 @@
     // plugin defaults
     //
     $.fn.qte.defaults = {
-        key:'SPACE',
+        key:['SPACE'],
         time:0,
         delay:0,
         max_attempt:0,
@@ -51,7 +58,7 @@
     //
     function debug(obj) {
         if (window.console && window.console.log)
-            window.console.log('QTE Call' + JSON.stringify(obj));
+            window.console.log('QTE Debug: ' + JSON.stringify(obj));
     };
     //
     // define and expose our format function
@@ -59,18 +66,19 @@
     function pop(obj,options) {
 	obj.addClass('QTE')
 	var attempt = 0;
+	var pressed = 0;
 	if (options.time === 0){
 	    options.display.call(obj.get(),options,attempt);
 	    if(options.hover){
-		obj.hover(function hqte(){bindqte(obj,options,attempt)});
+		obj.hover(function hqte(){bindqte(obj,options,attempt,pressed)});
 	    }else{
-		bindqte(obj,options,attempt);
+		bindqte(obj,options,attempt,pressed);
 	    }
 	    delayedQte(obj,options);
 	}else{
             setTimeout(function(){               	
 		options.display.call(obj.get(),options,attempt);
-		bindqte(obj,options,attempt);
+		bindqte(obj,options,attempt,pressed);
 		delayedQte(obj,options);
             },options.time);
         }
@@ -84,17 +92,22 @@
                 },options.delay)
 	    }
     }
-    function bindqte(obj,options,attempt){
+    function bindqte(obj,options,attempt,pressed){
         $(document).keydown(function(event) {
-            attempt = attempt + 1;
-            if ( String.fromCharCode(event.which) === (options.key).toUpperCase() ) {
-                options.succes.call(obj.get());
-		$(document).unbind('keydown');
+            if ( String.fromCharCode(event.which) === (options.key[pressed]).toUpperCase() ) {
+		pressed = pressed + 1;
+		if (pressed === options.key.length){
+                    options.succes.call(obj.get());
+		    $(document).unbind('keydown');
+		}
             }
-            else{                             
+            else{
+		attempt = attempt + 1;
+		pressed = 0;
 		if(attempt < options.max_attempt){
                     options.fail_attempt.call(obj.get(),options,attempt);
-		}else{		  
+		}
+		else{	
 		    options.fail.call(obj.get());
 		    $(document).unbind('keydown')
 		}
