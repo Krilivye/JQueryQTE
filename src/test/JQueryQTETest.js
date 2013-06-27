@@ -11,7 +11,7 @@ $(document).ready(function(){
 	    $('#test').empty()
 	    $('#test2').empty()
 	    $('.ctest').empty()
-	    $(document).unbind('keydown')
+
 	}
     })
     test("Can display the selected key", function(){
@@ -19,7 +19,8 @@ $(document).ready(function(){
 	$('#test').qte({key:'a'});
         
 	equal($('.QTE').html(), "a", "We expect value to be A");
-;
+	
+	$(document).unbind('keydown');
     })
     test("Correct keypressed load a succes",function(){
         $('#test').qte({key:'a'})
@@ -45,10 +46,38 @@ $(document).ready(function(){
         
 	equal($('.QTE').html(), "SPACE");
         clock.restore();
+	$(document).unbind('keydown');
     })
-    test("Can display for a selected delay", function(){
+    test("Qte fail atfter a selected delay", function(){
         var clock = this.sandbox.useFakeTimers();
         $('#test').qte({delay:10000});
+        
+
+	clock.tick(10);
+	equal($('.QTE').html(), "SPACE");
+	clock.tick(100001);
+
+	equal($('.QTE').html(), "Fail!");
+        clock.restore();
+    })
+    test("If QTE is successfull,qte still display success after a delay",function(){
+        var clock = this.sandbox.useFakeTimers();
+        $('#test').qte({key:'a',delay:10000});
+        
+
+	clock.tick(10);
+	$('#test').trigger(key_a);
+	equal($('.QTE').html(), "SUCCES");
+
+	clock.tick(100001);
+	
+
+	equal($('.QTE').html(), "SUCCES");
+        clock.restore();	
+    })
+    test("Qte can be still active after a selected delay with option failOnDelay set to false",function(){
+        var clock = this.sandbox.useFakeTimers();
+        $('#test').qte({delay:10000,failOnDelay:false});
         
 
 	clock.tick(10);
@@ -68,8 +97,9 @@ $(document).ready(function(){
 	equal($('.QTE').html(), "SPACE");
 	clock.tick(100001);
 
-	equal($('.QTE').html(), "");
+	equal($('.QTE').html(), "Fail!");
         clock.restore();
+	$(document).unbind('keydown');
     })
     test("Can be chained",function(){
         var clock = this.sandbox.useFakeTimers();
@@ -80,8 +110,9 @@ $(document).ready(function(){
         
 	equal($('.QTE').html(),"SUCCES")
         clock.tick(11);
-        equal($('.QTE:last').html(), "SPACE");
+        equal($('.QTE').html(), "SPACE");
         clock.restore();
+	$(document).unbind('keydown');
     })
 
     test("Can success after several attempt", function(){
@@ -97,8 +128,7 @@ $(document).ready(function(){
     })
     
     test("Can fail after several attempt", function(){
-        $('#test').qte({key:'b',max_attempt:3})
-        
+        $('#test').qte({key:'b',max_attempt:3})        
 	$('#test').trigger(key_a)
         equal($('.QTE').html(),"Fail! Try again")
         $('#test').trigger(key_a)
@@ -139,12 +169,14 @@ $(document).ready(function(){
 	$.each($('.ctest'),function(index,value){
 	    equal($(value).html(),'SPACE');
 	});
+	$(document).unbind('keydown');
+
     })
     test("Can have independent qte set on multiple selector with hover",function(){
 	$('.ctest').qte({hover:true});
 	
 	$('.ctest:first').trigger(mousehover);
-	$('#test').trigger(key_b)
+	$(document).trigger(key_b)
 	
 	equal($('.ctest:first').html(),'Fail!');
 	equal($('.ctest:last').html(),'SPACE');
@@ -153,7 +185,8 @@ $(document).ready(function(){
     test("Can offer pattern qte (combo)",function(){
 	$('#test').qte({key:['a','b','c']});
 	
-	equal($('#test').html(),'a,b,c');		  
+	equal($('#test').html(),'a,b,c');	
+	$(document).unbind('keydown');	  
     })
     test("Can work with a pattern qte",function(){
 	$('#test').qte({key:['a','b','c']});
@@ -249,12 +282,30 @@ $(document).ready(function(){
 	equal($('.QTE').html(),"Fail, left attemps:2");
     })
 
+    test("The fail function does not need to clean the qte",function(){
+	var failfunction = function (){$('#test2').html('test2')};
+	
+	$('#test').qte({key:'a',fail: failfunction});
+	
+	$('#test').trigger(key_b);
+	equal($('.QTE').html(),"");
+    })
+
     test("Can change the succes function",function(){
 	var succesfunction = function (){$(this).html('Win')};
 	$('#test').qte({key:'a',succes: succesfunction});
 	
 	$('#test').trigger(key_a);
 	equal($('.QTE').html(),"Win");
+    })
+
+    test("The succes function does not need to clean the qte",function(){
+	var succesfunction = function (){$('#test2').html('test2')};
+	
+	$('#test').qte({key:'a',succes: succesfunction});
+	
+	$('#test').trigger(key_a);
+	equal($('.QTE').html(),"");
     })
     
     test("Can change the display function",function(){

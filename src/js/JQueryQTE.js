@@ -11,9 +11,10 @@
 	if (options && options.key){
             options.key = [].concat(options.key)
 	}
-	var opts = $.extend({}, $.fn.qte.defaults, options);
+
         // iterate and reformat each matched element
         return this.each(function() {
+	    var opts = $.extend({}, $.fn.qte.defaults, options);
 	    $this = $(this);
 	    pop($this,opts);
 	});
@@ -29,10 +30,10 @@
 
     $.fn.qte.display = function(options,attempt){
 	var display = ""
-	    $.each(options.key, function(index,value){
-		display = display + value +','
-	    })
-	$(this).html(display.slice(0,-1))
+	$.each(options.key, function(index,value){
+	    display = display + value +','
+	})
+	    $(this).html(display.slice(0,-1))
     }
 
     $.fn.qte.fail_attempt = function(options,attempt){
@@ -47,6 +48,7 @@
         delay:0,
         max_attempt:0,
 	hover:false,
+	failOnDelay:true,
 	fail:$.fn.qte.fail,
 	fail_attempt:$.fn.qte.fail_attempt,
 	succes:$.fn.qte.succes,
@@ -67,38 +69,60 @@
 	obj.addClass('QTE')
 	var attempt = 0;
 	var pressed = 0;
+	var issuccesfull = false;
 	if (options.time === 0){
 	    options.display.call(obj.get(),options,attempt);
+	    cancelT =   delayedQte(obj,options);
 	    if(options.hover){
-		obj.hover(function hqte(){bindqte(obj,options,attempt,pressed)});
+		obj.hover(function hqte(){bindqte(obj,options,attempt,pressed,cancelT)				 },
+			  function hclear(){
+			      $(document).unbind('keydown')
+			  }
+			 );
+
 	    }else{
-		bindqte(obj,options,attempt,pressed);
+		bindqte(obj,options,attempt,pressed,cancelT);
 	    }
-	    delayedQte(obj,options);
+	    
 	}else{
             setTimeout(function(){               	
 		options.display.call(obj.get(),options,attempt);
-		bindqte(obj,options,attempt,pressed);
-		delayedQte(obj,options);
+		cancelT = delayedQte(obj,options);  
+		if(options.hover){
+		    obj.hover(function hqte(){bindqte(obj,options,attempt,pressed,cancelT)				 },
+			  function hclear(){
+			      $(document).unbind('keydown')
+			  }
+			 );
+		}else{
+		    bindqte(obj,options,attempt,pressed,cancelT);
+		}
             },options.time);
         }
     };
 
+
     function delayedQte(obj,options){
-            if(options.delay != 0){
-                setTimeout(function(){
-                    obj.empty();
-		    $(document).unbind('keydown');
-                },options.delay)
-	    }
+        if(options.delay != 0){
+            var cancelT = setTimeout(function(){
+		if(options.failOnDelay){
+		    cleanqte(obj);
+		    options.fail.call(obj.get());
+		}else{
+		    obj.empty();
+		}		    
+            },options.delay)
+	}
+	return cancelT;
     }
-    function bindqte(obj,options,attempt,pressed){
+    function bindqte(obj,options,attempt,pressed,cancelT){
         $(document).keydown(function(event) {
             if ( String.fromCharCode(event.which) === (options.key[pressed]).toUpperCase() ) {
 		pressed = pressed + 1;
 		if (pressed === options.key.length){
+		    cleanqte(obj);
+		    window.clearTimeout(cancelT);
                     options.succes.call(obj.get());
-		    $(document).unbind('keydown');
 		}
             }
             else{
@@ -108,14 +132,17 @@
                     options.fail_attempt.call(obj.get(),options,attempt);
 		}
 		else{	
+		    cleanqte(obj);
 		    options.fail.call(obj.get());
-		    $(document).unbind('keydown')
 		}
             }           
         })
     }
 
-
+    function cleanqte(obj){
+	obj.empty();
+	$(document).unbind('keydown');
+    }
 
 
     //
