@@ -1,12 +1,9 @@
-//
+// Annonymous function 
 // create closure
-//
 (function($) {
 
 
-    //
-    // plugin definition
-    //
+    // jquery plugin definition
     $.fn.qte = function(options) {
 	if (options && options.key){
             options.key = [].concat(options.key)
@@ -89,11 +86,11 @@
 		options.display.call(obj.get(),options,attempt);
 		cancelT = delayedQte(obj,options);  
 		if(options.hover){
-		    obj.hover(function hqte(){bindqte(obj,options,attempt,pressed,cancelT)				 },
-			  function hclear(){
-			      $(document).unbind('keydown')
-			  }
-			 );
+		    obj.hover(function hqte(){bindqte(obj,options,attempt,pressed,cancelT)},
+			      function hclear(){
+				  $(document).unbind('keydown')
+			      }
+			     );
 		}else{
 		    bindqte(obj,options,attempt,pressed,cancelT);
 		}
@@ -145,9 +142,8 @@
     }
 
 
-    //
-    // end of closure
-    //
+    // Annonymous function call
+    // assign $ to jQuery.
 })(jQuery);
 
 
