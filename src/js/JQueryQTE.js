@@ -26,6 +26,7 @@
     }
 
     $.fn.qte.display = function(options,attempt){
+	$(this).addClass('QTE');
 	var display = ""
 	$.each(options.key, function(index,value){
 	    display = display + value +','
@@ -63,7 +64,6 @@
     // define and expose our format function
     //
     function pop(obj,options) {
-	obj.addClass('QTE')
 	var attempt = 0;
 	var pressed = 0;
 	var issuccesfull = false;
@@ -89,7 +89,7 @@
 		    obj.hover(function hqte(){bindqte(obj,options,attempt,pressed,cancelT)},
 			      function hclear(){
 				  $(document).unbind('keydown')
-			      }
+f			      }
 			     );
 		}else{
 		    bindqte(obj,options,attempt,pressed,cancelT);
@@ -106,6 +106,7 @@
 		    cleanqte(obj);
 		    options.fail.call(obj.get());
 		}else{
+		    obj.removeClass('QTE');
 		    obj.empty();
 		}		    
             },options.delay)
@@ -137,6 +138,7 @@
     }
 
     function cleanqte(obj){
+	obj.removeClass('QTE');
 	obj.empty();
 	$(document).unbind('keydown');
     }

@@ -17,8 +17,7 @@ body {
 }
 #qte{
     font-size:xx-large;
-    margin-top:10%;
-    margin-bottom:auto;
+    width:100px;
     margin-left:auto;
     margin-right:auto;
     text-align:center;
@@ -30,4 +29,14 @@ body {
     height: 200px;
     width: 100%;
     text-align:center;
+}
+
+.QTE{
+   border-radius: 15px; 
+   -moz-border-radius: 15px; 
+   -webkit-border-radius: 15px; 
+   border: 2px inset #7F8066; 
+}
+.QTE:hover{
+   background-color:#8F9077;
 }
