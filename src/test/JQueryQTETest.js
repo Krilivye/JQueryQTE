@@ -18,7 +18,7 @@ $(document).ready(function(){
         
 	$('#test').qte({key:'a'});
         
-	equal($('.QTE').html(), "a", "We expect value to be A");
+	equal($('#test').html(), "a", "We expect value to be A");
 	
 	$(document).unbind('keydown');
     })
@@ -27,7 +27,7 @@ $(document).ready(function(){
 
         $('#test').trigger(key_a)
 
-        equal($('.QTE').html(),"SUCCES")
+        equal($('#test').html(),"SUCCES")
     })
     test("Can fail if not correct key entered",function(){
         
@@ -35,7 +35,7 @@ $(document).ready(function(){
         
 	$('#test').trigger(key_b)
         
-	equal($('.QTE').html(),"Fail!")
+	equal($('#test').html(),"Fail!")
         
     })
     test("Can display at selected time", function(){
@@ -44,7 +44,7 @@ $(document).ready(function(){
         
 	clock.tick(10000);
         
-	equal($('.QTE').html(), "SPACE");
+	equal($('#test').html(), "SPACE");
         clock.restore();
 	$(document).unbind('keydown');
     })
@@ -54,10 +54,10 @@ $(document).ready(function(){
         
 
 	clock.tick(10);
-	equal($('.QTE').html(), "SPACE");
+	equal($('#test').html(), "SPACE");
 	clock.tick(100001);
 
-	equal($('.QTE').html(), "Fail!");
+	equal($('#test').html(), "Fail!");
         clock.restore();
     })
     test("If QTE is successfull,qte still display success after a delay",function(){
@@ -67,12 +67,12 @@ $(document).ready(function(){
 
 	clock.tick(10);
 	$('#test').trigger(key_a);
-	equal($('.QTE').html(), "SUCCES");
+	equal($('#test').html(), "SUCCES");
 
 	clock.tick(100001);
 	
 
-	equal($('.QTE').html(), "SUCCES");
+	equal($('#test').html(), "SUCCES");
         clock.restore();	
     })
     test("Qte can be still active after a selected delay with option failOnDelay set to false",function(){
@@ -81,10 +81,10 @@ $(document).ready(function(){
         
 
 	clock.tick(10);
-	equal($('.QTE').html(), "SPACE");
+	equal($('#test').html(), "SPACE");
 	clock.tick(100001);
 
-	equal($('.QTE').html(), "");
+	equal($('#test').html(), "");
         clock.restore();
     })
 
@@ -94,10 +94,10 @@ $(document).ready(function(){
         
 	equal($('#test').html(),"");
 	clock.tick(11);
-	equal($('.QTE').html(), "SPACE");
+	equal($('#test').html(), "SPACE");
 	clock.tick(100001);
 
-	equal($('.QTE').html(), "Fail!");
+	equal($('#test').html(), "Fail!");
         clock.restore();
 	$(document).unbind('keydown');
     })
@@ -105,12 +105,12 @@ $(document).ready(function(){
         var clock = this.sandbox.useFakeTimers();
         $('#test').qte({key:'a'}).qte({time:10,delay:10})
         
-	equal($('.QTE').html(), "a");
+	equal($('#test').html(), "a");
         $('#test').trigger(key_a)
         
-	equal($('.QTE').html(),"SUCCES")
+	equal($('#test').html(),"SUCCES")
         clock.tick(11);
-        equal($('.QTE').html(), "SPACE");
+        equal($('#test').html(), "SPACE");
         clock.restore();
 	$(document).unbind('keydown');
     })
@@ -119,23 +119,23 @@ $(document).ready(function(){
         $('#test').qte({key:'b',max_attempt:3})
 
         $('#test').trigger(key_a)
-        equal($('.QTE').html(),"Fail! Try again")
+        equal($('#test').html(),"Fail! Try again")
         $('#test').trigger(key_a)
-        equal($('.QTE').html(),"Fail! Try again")
+        equal($('#test').html(),"Fail! Try again")
 
         $('#test').trigger(key_b)
-        equal($('.QTE').html(),"SUCCES")
+        equal($('#test').html(),"SUCCES")
     })
     
     test("Can fail after several attempt", function(){
         $('#test').qte({key:'b',max_attempt:3})        
 	$('#test').trigger(key_a)
-        equal($('.QTE').html(),"Fail! Try again")
+        equal($('#test').html(),"Fail! Try again")
         $('#test').trigger(key_a)
-        equal($('.QTE').html(),"Fail! Try again")
+        equal($('#test').html(),"Fail! Try again")
         
 	$('#test').trigger(key_a)
-        equal($('.QTE').html(),"Fail!")
+        equal($('#test').html(),"Fail!")
     })
     test("Can not work when qte hover option is set",function(){
 	$('#test').qte({hover:true})
@@ -247,7 +247,7 @@ $(document).ready(function(){
 	
 	$('#test').trigger(key_b);
 
-	equal($('.QTE').html(),"myFail");
+	equal($('#test').html(),"myFail");
 	
     })
 
@@ -255,12 +255,12 @@ $(document).ready(function(){
 	$('#test').qte({key:'a',max_attempt:3,fail:failfunction});
 	
 	$('#test').trigger(key_b)
-        equal($('.QTE').html(),"Fail! Try again")
+        equal($('#test').html(),"Fail! Try again")
         $('#test').trigger(key_b)
-        equal($('.QTE').html(),"Fail! Try again")
+        equal($('#test').html(),"Fail! Try again")
         
 	$('#test').trigger(key_b)
-        equal($('.QTE').html(),"myFail")
+        equal($('#test').html(),"myFail")
     })
 
     test("Can have 2 fails function on different QTE",function(){
@@ -279,7 +279,7 @@ $(document).ready(function(){
 	$('#test').qte({key:'a',max_attempt:3,fail_attempt: failAttempsFunction});
 	
 	$('#test').trigger(key_b);
-	equal($('.QTE').html(),"Fail, left attemps:2");
+	equal($('#test').html(),"Fail, left attemps:2");
     })
 
     test("The fail function does not need to clean the qte",function(){
@@ -288,7 +288,7 @@ $(document).ready(function(){
 	$('#test').qte({key:'a',fail: failfunction});
 	
 	$('#test').trigger(key_b);
-	equal($('.QTE').html(),"");
+	equal($('#test').html(),"");
     })
 
     test("Can change the succes function",function(){
@@ -296,7 +296,7 @@ $(document).ready(function(){
 	$('#test').qte({key:'a',succes: succesfunction});
 	
 	$('#test').trigger(key_a);
-	equal($('.QTE').html(),"Win");
+	equal($('#test').html(),"Win");
     })
 
     test("The succes function does not need to clean the qte",function(){
@@ -305,7 +305,7 @@ $(document).ready(function(){
 	$('#test').qte({key:'a',succes: succesfunction});
 	
 	$('#test').trigger(key_a);
-	equal($('.QTE').html(),"");
+	equal($('#test').html(),"");
     })
     
     test("Can change the display function",function(){
