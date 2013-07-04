@@ -47,6 +47,7 @@
         max_attempt:0,
 	hover:false,
 	failOnDelay:true,
+	delaywatcher:false,
 	fail:$.fn.qte.fail,
 	fail_attempt:$.fn.qte.fail_attempt,
 	succes:$.fn.qte.succes,
@@ -89,7 +90,7 @@
 		    obj.hover(function hqte(){bindqte(obj,options,attempt,pressed,cancelT)},
 			      function hclear(){
 				  $(document).unbind('keydown')
-f			      }
+				  f			      }
 			     );
 		}else{
 		    bindqte(obj,options,attempt,pressed,cancelT);
@@ -97,10 +98,21 @@ f			      }
             },options.time);
         }
     };
-
+    function delayWatcher(obj,init)
+    {
+	if ($(obj).children().length === 0){
+	    $(obj).append('<p></p>');
+	}
+	this.counter = (this.counter || init) -1;
+	$(obj).children().html('time left '+counter)
+    }
 
     function delayedQte(obj,options){
         if(options.delay != 0){
+	    if(options.delaywatcher){
+		var counter = options.delay/1000;
+		var cancelDelayWatcher= setInterval(function(){delayWatcher(obj.get(),counter)},1000);
+	    }
             var cancelT = setTimeout(function(){
 		if(options.failOnDelay){
 		    cleanqte(obj);

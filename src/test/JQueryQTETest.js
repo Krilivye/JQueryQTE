@@ -226,6 +226,22 @@ $(document).ready(function(){
 	equal($('#test').html(),'SUCCES');
     })
 
+    test("Can call a time delay callback function on delay",function(){
+        var clock = this.sandbox.useFakeTimers();
+	$('#test').qte({key:'a',delay:5000,delaywatcher:true});
+
+        clock.tick(1000);
+
+	equal($('#test').html(),'a<p>time left 4</p>');
+
+        clock.tick(1000);
+
+	equal($('#test').html(),'a<p>time left 3</p>');
+
+        clock.restore();
+	$(document).unbind('keydown');
+    })
+
     module("Customisation", {
 	setup: function(){
             key_a = jQuery.Event( 'keydown', { which: 65 } );
