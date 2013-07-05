@@ -12,3 +12,9 @@ Bibliothèque sur le système QTE
                          /__/:/ \__\/         \  \:\    
                          \__\/                 \__\/  
                          
+
+Cette bibliothèque permet d'associer un événement à un élément du DOM 
+    - à un temps donnée
+    - pour une certaine durée
+
+Le système se veux le plus configurable possible.
