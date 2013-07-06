@@ -18,3 +18,16 @@ Cette bibliothèque permet d'associer un événement à un élément du DOM
     - pour une certaine durée
 
 Le système se veux le plus configurable possible.
+
+La syntaxe est la suivante:
+
+$('selecteur').qte();
+
+les options se passent sous la forme d'un objet literal comportant les attributs suivants:
+
+{
+	key:'a' ou key:['a','b',...]
+	time:5
+	delay:5
+
+}
