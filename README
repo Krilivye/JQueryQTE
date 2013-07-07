@@ -22,13 +22,13 @@ Le système se veux le plus configurable possible.
 
 La syntaxe est la suivante:
 
-```js
+```javascript
 $('selecteur').qte();
 ```
 
 les options se passent sous la forme d'un objet literal comportant les attributs suivants:
 
-```js
+```javascript
 {key:'a' //ou key:['a','b',...]
 time:5
 delay:5
