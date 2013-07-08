@@ -31,7 +31,8 @@ $('selecteur').qte();
 les options se passent sous la forme d'un objet literal comportant les attributs suivants:
 
 ```javascript
-{key:'a' //ou key:['a','b',...]
+{
+key:'a' //ou key:['a','b',...]
 time:5
 delay:5
 }
