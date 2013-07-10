@@ -32,17 +32,17 @@ les options se passent sous la forme d'un objet literal comportant les attributs
 
 ```javascript
 {
-key:'a' //ou key:['a','b',...]
-time:5,
-delay:5,
-failOnDelay:true,
-max_attempt:1,
-hover:false,
-//Customisations des fonctions 'évènements'
-delaywatcher:false,
-fail: failfunction,
-fail_attempt: failAttempsFunction,
-succes: succesfunction,
-display:displayfunction,
+                          key:'a', //ou key:['a','b',...]
+                          time:5,
+                          delay:5,
+                          failOnDelay:true,
+                          max_attempt:1,
+                          hover:false,
+                          //Customisations des fonctions 'évènements'
+                          delaywatcher:false,
+                          fail: failfunction,
+                          fail_attempt: failAttempsFunction,
+                          succes: succesfunction,
+                          display:displayfunction
 }
 ```
