@@ -46,3 +46,6 @@ les options se passent sous la forme d'un objet literal comportant les attributs
                           display:displayfunction
 }
 ```
+
+Le fichier src/html/qte-game.html contient un example de jeux.
+Le script de démo étant src/html/qte-game.js
