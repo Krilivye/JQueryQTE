@@ -56,3 +56,5 @@ Le système permet de chainer différents qte:
 $('selecteur').qte({key:'a'}).qte({key:'b'})
 ```
 Dans ce cas le joueur ne peux remplir qu'une seul condition (soit a, soit b)
+
+To add : detail des options
