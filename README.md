@@ -33,11 +33,11 @@ les options se passent sous la forme d'un objet literal comportant les attributs
 ```javascript
 {
     key:'a', //ou key:['a','b',...]
-    time:5,
-    delay:5,
-    failOnDelay:true,
-    max_attempt:1,
-    hover:false,
+    time:5, // Temps avant que le QTE ne démarre
+    delay:5, //Durée de vie du QTE
+    failOnDelay:true, //Lance la fonction fail si la durée de vie du QTE est dépassé
+    max_attempt:1, // Nombre de tentative possible
+    hover:false, // Précise si le QTE est activable uniquement au survol de l'élément.
     //Customisations des fonctions 'évènements'
     delaywatcher:false,
     fail: failfunction,
