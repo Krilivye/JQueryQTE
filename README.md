@@ -39,11 +39,11 @@ les options se passent sous la forme d'un objet literal comportant les attributs
     max_attempt:1, // Nombre de tentative possible
     hover:false, // Précise si le QTE est activable uniquement au survol de l'élément.
     //Customisations des fonctions 'évènements'
-    delaywatcher:false,
-    fail: failfunction,
-    fail_attempt: failAttempsFunction,
-    succes: succesfunction,
-    display:displayfunction
+    delaywatcher:false, //Active une fonction de suivie (toutes les 1 secondes)
+    fail: failfunction,//permet de remplacer la fonction lancer en cas d'échec du qte
+    fail_attempt: failAttempsFunction, //permet de remplacer la fonction lancé en cas d'echec aux essais
+    succes: succesfunction, //permet de remplacer la fonction en cas de succes
+    display:displayfunction  //perme de remplacer la fonction d'affichage
 }
 ```
 
